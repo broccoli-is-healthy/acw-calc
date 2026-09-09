@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--
+Copyright 2026 broccoli-is-healthy
+Licensed under the MIT License. See LICENSE.
+-->
+<html lang="en-GB">
+<head>
+	<meta charset="utf-8" />
+	<title>ACW Calculator</title>
+	<script type="module" src="./js/main.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="icon" href="./percent-icon.svg" type="image/svg+xml" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/asvvvad/mono-color@1.2/light.min.css" media="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/asvvvad/mono-color@1.2/dark.min.css" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/asvvvad/mono-color@1.2/mono-color.min.css" />
+	<style>
+	body {
+		display: flex;
+		flex-direction: column;
+		opacity: 0;
+	}
+	
+	body.ready {
+		opacity: 1;
+		transition: opacity 0.4s ease-out;
+	}
+	
+	main.content {
+		margin-top: 0;
+		overflow: auto;
+		scrollbar-width: none;
+	}
+	
+	main.content::-webkit-scrollbar {
+		width: 0px;
+		background: transparent;
+	}
+	
+	footer {
+		max-height: 6rem;
+		flex: 1;
+		align-content: center;
+	}
+	
+	.flex-row {
+		display: flex;
+		align-items: center;
+	}
+	
+	.between {
+		justify-content: space-between;
+	}
+	
+	.end {
+		justify-content: end;
+	}
+	
+	button[aria-selected=true] {
+		pointer-events: none;
+		cursor: default;
+	}
+	
+	input {
+		field-sizing: content;
+	}
+	
+	label {
+		text-wrap: wrap;
+	}
+	</style>
+</head>
+<body class="container vh-100">
+	<header>
+		<nav role="tablist" class="flex-row m">
+			<button role="tab" class="btn primary" aria-controls="Calculator" aria-selected="true" >Calculator</button>
+			<button role="tab" class="btn" aria-controls="Settings">Settings</button>
+		</nav>
+	</header>
+	<main class="content">
+		<article role="tabpanel" id="Calculator">
+			<form>
+				<fieldset>
+					<legend><input class="day" id="mo" type="checkbox" /><label for="mo">Monday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset>
+					<legend><input class="day" id="tu" type="checkbox" /><label for="tu">Tuesday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset>
+					<legend><input class="day" id="we" type="checkbox" /><label for="we">Wednesday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset>
+					<legend><input class="day" id="th" type="checkbox" /><label for="th">Thursday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset>
+					<legend><input class="day" id="fr" type="checkbox" /><label for="fr">Friday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset class="weekend" hidden>
+					<legend><input class="day" id="sa" type="checkbox" /><label for="sa">Saturday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset class="weekend" hidden>
+					<legend><input class="day" id="su" type="checkbox" /><label for="su">Sunday</label></legend>
+					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				</fieldset>
+				<fieldset>
+					<legend>Total ACW</legend>
+					<input id="total-acw" class="inline w-100 tacenter" placeholder="Total ACW %" disabled />
+				</fieldset>
+			</form>
+			<div class="flex-row end">
+				<p class="m0 nano" hidden>Resets in: <span id="countdown">X Days</span></p>
+				<button id="reset-calc" class="btn bg-error white m" aria-label="Reset Calculator">Reset</button>
+			</div>
+		</article>
+		<article role="tabpanel" id="Settings" hidden >
+			<form>
+				<fieldset>
+					<legend>Workday</legend>
+					<div>
+						<label for="work-hours">Work hours:<input id="work-hours" type="number" min="1" max="24" value="8" step="1" /></label>
+					</div>
+					<div>
+					</div>
+						<label for="daily-aux">Daily AUX (minutes):<input id="daily-aux" type="number" min="1" max="1440" value="30" step="1" /></label>
+					<div>
+						<label for="acw-target">ACW target (weekly %):<input id="acw-target" type="number" min="0" max="100" value="25" step="1" /></label>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Display time</legend>
+					<div>
+						<input id="display-time-day" type="checkbox" /><label for="display-time-day">Available ACW</label>
+					</div>
+					<div>
+						<input id="display-time-week" type="checkbox" /><label for="display-time-week">Total ACW</label>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Miscellaneous</legend>
+					<div>
+						<input id="show-weekend" type="checkbox" /><label for="show-weekend">Show Saturday and Sunday</label>
+					</div>
+					<div>
+						<input id="acw-wo-aux" type="checkbox" /><label for="acw-wo-aux">Calculate ACW from work hours w/o AUX</label>
+					</div>
+				</fieldset>
+				<div class="flex-row end">
+					<button id="reset-everything" class="btn bg-error white m" aria-label="Reset everything">Reset everything</button>
+				</div>
+			</form>
+		</article>
+	</main>
+	<footer class="default tacenter nano">
+		This website was made without ai. <a href="https://github.com/broccoli-is-healthy/acw-calc" target="_blank">GitHub</a>
+	</footer>
+</body>
+</html>
