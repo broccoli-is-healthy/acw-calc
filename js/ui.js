@@ -1,4 +1,4 @@
-// Display content (FOUC prevention)
+// FOUC prevention, this should load long after css is ready
 document.querySelector("body").classList.add("ready");
 
 // Formaters
@@ -15,8 +15,7 @@ const tab_panels = document.querySelectorAll("article[role=tabpanel]");
 const workHours = document.querySelector("#work-hours");
 const dailyAux = document.querySelector("#daily-aux");
 const acwTarget = document.querySelector("#acw-target");
-const canShowTimeDay = document.querySelector("#display-time-day");
-const canShowTimeWeek = document.querySelector("#display-time-week");
+const canShowTime = document.querySelector("#display-time");
 const canShowWeekend = document.querySelector("#show-weekend");
 const isAcwWoAux = document.querySelector("#acw-wo-aux");
 
@@ -97,11 +96,8 @@ export function setupEventListeners({
 		onSettingChange("acwTarget", Number(acwTarget.value));
 	});
 	// Display time
-	canShowTimeDay.addEventListener("change", () => {
-		onSettingChange("canShowTimeDay", Boolean(canShowTimeDay.checked));
-	});
-	canShowTimeWeek.addEventListener("change", () => {
-		onSettingChange("canShowTimeWeek", Boolean(canShowTimeWeek.checked));
+	canShowTime.addEventListener("change", () => {
+		onSettingChange("canShowTime", Boolean(canShowTime.checked));
 	});
 	// Miscellaneous
 	canShowWeekend.addEventListener("change", () => {
@@ -139,8 +135,7 @@ export function setupSettings(settings) {
 	workHours.value = settings.workHours;
 	dailyAux.value = settings.dailyAux;
 	acwTarget.value = settings.acwTarget;
-	canShowTimeDay.checked = settings.canShowTimeDay;
-	canShowTimeWeek.checked = settings.canShowTimeWeek;
+	canShowTime.checked = settings.canShowTime;
 	canShowWeekend.checked = settings.canShowWeekend;
 	isAcwWoAux.checked = settings.isAcwWoAux;
 	
@@ -166,9 +161,7 @@ export function setupCalcState(calcState) {
 };
 
 export function populateCalcResults(result, settings) {
-	const canShowTimeDay = settings.canShowTimeDay;
-	const canShowTimeWeek = settings.canShowTimeWeek;
-	const defaultDuration = { minutes: 0 };
+	const canShowTime = settings.canShowTime;
 	
 	availAcw.forEach((avail, i) => {
 		const day = result[i];
@@ -181,14 +174,12 @@ export function populateCalcResults(result, settings) {
 		};
 		
 		if (day.actualAcw) {
-			avail.value = format.percent(day.acwDifference) + 
-				(canShowTimeDay ? " / " + format.time(day.acwDifferenceTime) : "");
+			avail.value = (canShowTime ? format.time(day.acwDifferenceTime) : format.percent(day.acwDifference));
 		} else {
-			avail.value = format.percent(day.availableAcw) + 
-				(canShowTimeDay ? " / " + format.time(day.availableAcwTime) : "");
+			avail.value = (canShowTime ? format.time(day.availableAcwTime) : format.percent(day.availableAcw));
 		}
 	});
 	
-	totalAcw.value = format.percent(result.at(-1).totalAcw) +
-		(canShowTimeWeek ? " / " + format.time(result.at(-1).totalAcwTime) : "");
+	totalAcw.value = (canShowTime ? format.time(result.at(-1).totalAcwTime) : format.percent(result.at(-1).totalAcw));
+		
 };

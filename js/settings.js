@@ -4,8 +4,7 @@ const defaultSettings = {
 	workHours: 8,
 	dailyAux: 30,
 	acwTarget: 25,
-	canShowTimeDay: false,
-	canShowTimeWeek: false,
+	canShowTime: false,
 	canShowWeekend: false,
 	isAcwWoAux: false
 };

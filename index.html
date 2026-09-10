@@ -26,13 +26,15 @@ Licensed under the MIT License. See LICENSE.
 		transition: opacity 0.4s ease-out;
 	}
 	
-	main.content {
-		margin-top: 0;
+	main {
+		width: 100%;
+		margin-top: 1rem;
+		margin-bottom: auto;
 		overflow: auto;
 		scrollbar-width: none;
 	}
 	
-	main.content::-webkit-scrollbar {
+	main::-webkit-scrollbar {
 		width: 0px;
 		background: transparent;
 	}
@@ -63,6 +65,12 @@ Licensed under the MIT License. See LICENSE.
 	
 	input {
 		field-sizing: content;
+		font-size: 16px;
+	}
+	
+	input:disabled {
+		-webkit-text-fill-color: var(--fg);
+		opacity: 1;
 	}
 	
 	label {
@@ -72,52 +80,52 @@ Licensed under the MIT License. See LICENSE.
 </head>
 <body class="container">
 	<header>
-		<nav role="tablist" class="flex-row m">
+		<nav role="tablist" class="flex-row">
 			<button role="tab" class="btn primary" aria-controls="Calculator" aria-selected="true" >Calculator</button>
 			<button role="tab" class="btn" aria-controls="Settings">Settings</button>
 		</nav>
 	</header>
-	<main class="content">
+	<main>
 		<article role="tabpanel" id="Calculator">
 			<form>
 				<fieldset>
 					<legend><input class="day" id="mo" type="checkbox" /><label for="mo">Monday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset>
 					<legend><input class="day" id="tu" type="checkbox" /><label for="tu">Tuesday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset>
 					<legend><input class="day" id="we" type="checkbox" /><label for="we">Wednesday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset>
 					<legend><input class="day" id="th" type="checkbox" /><label for="th">Thursday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset>
 					<legend><input class="day" id="fr" type="checkbox" /><label for="fr">Friday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset class="weekend" hidden>
 					<legend><input class="day" id="sa" type="checkbox" /><label for="sa">Saturday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset class="weekend" hidden>
 					<legend><input class="day" id="su" type="checkbox" /><label for="su">Sunday</label></legend>
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
-				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW %" disabled />
+				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
 				<fieldset>
 					<legend>Total ACW</legend>
-					<input id="total-acw" class="inline w-100 tacenter" placeholder="Total ACW %" disabled />
+					<input id="total-acw" class="inline w-100 tacenter" placeholder="Total ACW" disabled />
 				</fieldset>
 			</form>
 			<div class="flex-row end">
@@ -140,16 +148,10 @@ Licensed under the MIT License. See LICENSE.
 					</div>
 				</fieldset>
 				<fieldset>
-					<legend>Display time</legend>
-					<div>
-						<input id="display-time-day" type="checkbox" /><label for="display-time-day">Available ACW</label>
-					</div>
-					<div>
-						<input id="display-time-week" type="checkbox" /><label for="display-time-week">Total ACW</label>
-					</div>
-				</fieldset>
-				<fieldset>
 					<legend>Miscellaneous</legend>
+					<div>
+						<input id="display-time" type="checkbox" /><label for="display-time">Display time instead of percentage</label>
+					</div>
 					<div>
 						<input id="show-weekend" type="checkbox" /><label for="show-weekend">Show Saturday and Sunday</label>
 					</div>
