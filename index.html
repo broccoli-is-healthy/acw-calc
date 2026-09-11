@@ -58,6 +58,10 @@ Licensed under the MIT License. See LICENSE.
 		justify-content: end;
 	}
 	
+	.grow > * {
+		flex-grow: 1;
+	}
+	
 	button[aria-selected=true] {
 		pointer-events: none;
 		cursor: default;
@@ -123,10 +127,16 @@ Licensed under the MIT License. See LICENSE.
 					<input class="actual-acw inline w-50 tacenter" type="number" min="0" max="100" step="1" placeholder="Actual ACW %" /><!--
 				 --><input class="avail-acw inline w-50 tacenter" placeholder="Available ACW" disabled />
 				</fieldset>
-				<fieldset>
-					<legend>Total ACW</legend>
-					<input id="total-acw" class="inline w-100 tacenter" placeholder="Total ACW" disabled />
-				</fieldset>
+				<div class="flex-row grow">
+					<fieldset>
+						<legend>Average ACW</legend>
+						<input id="average-acw" class="inline w-100 tacenter" placeholder="Average ACW" disabled />
+					</fieldset>
+					<fieldset>
+						<legend>Remaining ACW</legend>
+						<input id="remaining-acw" class="inline w-100 tacenter" placeholder="Remaining ACW" disabled />
+					</fieldset>
+				</div>
 			</form>
 			<div class="flex-row end">
 				<p class="m0 nano" hidden>Resets in: <span id="countdown">X Days</span></p>

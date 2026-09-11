@@ -12,23 +12,24 @@ const tabs = document.querySelectorAll("nav[role=tablist] > button");
 const tab_panels = document.querySelectorAll("article[role=tabpanel]");
 
 // Settings
-const workHours = document.querySelector("#work-hours");
-const dailyAux = document.querySelector("#daily-aux");
-const acwTarget = document.querySelector("#acw-target");
-const canShowTime = document.querySelector("#display-time");
-const canShowWeekend = document.querySelector("#show-weekend");
-const isAcwWoAux = document.querySelector("#acw-wo-aux");
+const workHours = document.getElementById("work-hours");
+const dailyAux = document.getElementById("daily-aux");
+const acwTarget = document.getElementById("acw-target");
+const canShowTime = document.getElementById("display-time");
+const canShowWeekend = document.getElementById("show-weekend");
+const isAcwWoAux = document.getElementById("acw-wo-aux");
 
 // Calculator
 const days = document.querySelectorAll(".day");
 const weekend = document.querySelectorAll(".weekend");
 const actualAcwInput = document.querySelectorAll(".actual-acw");
 const availAcw = document.querySelectorAll(".avail-acw");
-const totalAcw = document.getElementById("total-acw");
+const averageAcw = document.getElementById("average-acw");
+const remainingAcw = document.getElementById("remaining-acw");
 
 // Reset buttons
-const resetCalculator = document.querySelector("#reset-calc");
-const resetEverything = document.querySelector("#reset-everything");
+const resetCalculator = document.getElementById("reset-calc");
+const resetEverything = document.getElementById("reset-everything");
 
 // TABS
 tabs.forEach((tab) => {
@@ -174,5 +175,6 @@ export function populateCalcResults(result, settings) {
 		avail.value = (canShowTime ? format.time(day.acwDifferenceTime) : format.percent(day.acwDifference));
 	});
 	
-	totalAcw.value = (canShowTime ? format.time(result.acwRemainingTime) : format.percent(result.acwRemaining));
+	averageAcw.value = format.percent(result.averageAcw);
+	remainingAcw.value = (canShowTime ? format.time(result.acwRemainingTime) : format.percent(result.acwRemaining));
 };
