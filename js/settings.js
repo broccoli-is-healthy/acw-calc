@@ -6,26 +6,43 @@ const defaultSettings = {
 	acwTarget: 25,
 	canShowTime: false,
 	canShowWeekend: false,
-	isAcwWoAux: false
+	isAcwWoAux: false,
+};
+
+function createSettings(savedSettings = {}) {
+	return {
+		...defaultSettings,
+		...savedSettings,
+		
+		get workHoursInSec() {
+			return this.workHours * 3600;
+		},
+		get dailyAuxInSec() {
+			return this.dailyAux * 60;
+		},
+		
+		get acwTargetPercent() {
+			return this.acwTarget * 0.01;
+		},
+	};
 };
 
 let settings = loadSettings();
 
 function loadSettings() {
 	const savedSettings = localStorage.getItem(STORAGE_KEY);
-	
-	if (!savedSettings) {
-		return { ...defaultSettings };
-	};
+		
+	if (!savedSettings) return createSettings();
 	
 	try {
-		return {
-			...defaultSettings,
-			...JSON.parse(savedSettings)
-		};
+		return createSettings(JSON.parse(savedSettings));
 	} catch {
-		return { ...defaultSettings };
+		return createSettings();
 	};
+}
+
+export function getSettings() {
+	return structuredClone(settings);
 };
 
 function saveSettings() {
@@ -33,10 +50,6 @@ function saveSettings() {
 		STORAGE_KEY,
 		JSON.stringify(settings)
 	);
-};
-
-export function getSettings() {
-	return structuredClone(settings);
 };
 
 export function setSetting(name, value) {

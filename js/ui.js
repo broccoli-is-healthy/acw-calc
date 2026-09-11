@@ -145,14 +145,14 @@ export function setupSettings(settings) {
 // Calculator Initialization
 export function setupCalcState(calcState) {
 	days.forEach((day, i) => {
-		const canEnable = calcState[i].attended;
+		const canEnable = calcState.days[i].attended;
 		const acwInput = actualAcwInput[i];
 		
 		day.checked = canEnable;
 		
 		if (canEnable) {
 			acwInput.removeAttribute("disabled");
-			acwInput.value = calcState[i].actualAcw;
+			acwInput.value = calcState.days[i].actualAcw;
 		} else {
 			acwInput.setAttribute("disabled", true);
 			acwInput.value = "";
@@ -164,22 +164,15 @@ export function populateCalcResults(result, settings) {
 	const canShowTime = settings.canShowTime;
 	
 	availAcw.forEach((avail, i) => {
-		const day = result[i];
-		
-		if (day.total) return;
+		const day = result.days[i];
 		
 		if (!day.attended || isNaN(day.availableAcw)) {
 			avail.value = "";
 			return;
 		};
 		
-		if (day.actualAcw) {
-			avail.value = (canShowTime ? format.time(day.acwDifferenceTime) : format.percent(day.acwDifference));
-		} else {
-			avail.value = (canShowTime ? format.time(day.availableAcwTime) : format.percent(day.availableAcw));
-		}
+		avail.value = (canShowTime ? format.time(day.acwDifferenceTime) : format.percent(day.acwDifference));
 	});
 	
-	totalAcw.value = (canShowTime ? format.time(result.at(-1).totalAcwTime) : format.percent(result.at(-1).totalAcw));
-		
+	totalAcw.value = (canShowTime ? format.time(result.acwRemainingTime) : format.percent(result.acwRemaining));
 };
