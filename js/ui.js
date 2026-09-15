@@ -31,6 +31,8 @@ const remainingAcw = document.getElementById("remaining-acw");
 const resetCalculator = document.getElementById("reset-calc");
 const resetEverything = document.getElementById("reset-everything");
 
+const resetCountdown = document.getElementById("countdown");
+
 // TABS
 tabs.forEach((tab) => {
 	tab.addEventListener("click", (e) => {
@@ -177,4 +179,12 @@ export function populateCalcResults(result, settings) {
 	
 	averageAcw.value = format.percent(result.averageAcw);
 	remainingAcw.value = (canShowTime ? format.time(result.acwRemainingTime) : format.percent(result.acwRemaining));
+};
+
+export function updateCountdown(time) {
+	resetCountdown.textContent = format.time({
+		days: Math.floor(time / 3600 / 24),
+		hours: Math.floor(time / 3600 % 24),
+		minutes: Math.floor(time / 60 % 60),
+	});
 };

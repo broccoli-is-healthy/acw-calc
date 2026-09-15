@@ -1,6 +1,6 @@
-import { getSettings, setSetting, resetSettings } from "./settings.js";
-import { getCalcState, saveCalcInput, resetCalcState, calculate } from "./math.js";
-import { setupSettings, setupCalcState, setupEventListeners, populateCalcResults } from "./ui.js"; 
+import { getSettings, setSetting, resetSettings, checkResetDate, } from "./settings.js";
+import { getCalcState, saveCalcInput, resetCalcState, calculate, } from "./math.js";
+import { setupSettings, setupCalcState, setupEventListeners, populateCalcResults, updateCountdown, } from "./ui.js"; 
 
 let settings;
 let calcState;
@@ -32,5 +32,16 @@ setupEventListeners({
 	onResetCalculator: () => { resetCalcState(), initialize() },
 	onResetAll: () => { resetSettings(), resetCalcState(), initialize() }
 });
+
+(function countdown() {
+	updateCountdown(
+		checkResetDate(() => {
+			resetCalcState(),
+			initialize()
+		})
+	);
+	
+	setTimeout(countdown, 60_000);
+})();
 
 initialize();
