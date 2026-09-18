@@ -35,7 +35,6 @@ export function checkResetDate(onReset = () => {}) {
 };
 
 const defaultSettings = {
-	workHours: 8,
 	dailyAux: 30,
 	acwTarget: 25,
 	canShowTime: false,

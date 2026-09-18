@@ -12,7 +12,6 @@ const tabs = document.querySelectorAll("nav[role=tablist] > button");
 const tab_panels = document.querySelectorAll("article[role=tabpanel]");
 
 // Settings
-const workHours = document.getElementById("work-hours");
 const dailyAux = document.getElementById("daily-aux");
 const acwTarget = document.getElementById("acw-target");
 const canShowTime = document.getElementById("display-time");
@@ -22,6 +21,8 @@ const isAcwWoAux = document.getElementById("acw-wo-aux");
 // Calculator
 const days = document.querySelectorAll(".day");
 const weekend = document.querySelectorAll(".weekend");
+const actualTimeHours = document.querySelectorAll(".actual-time-h");
+const actualTimeMinutes = document.querySelectorAll(".actual-time-m");
 const actualAcwInput = document.querySelectorAll(".actual-acw");
 const availAcw = document.querySelectorAll(".avail-acw");
 const averageAcw = document.getElementById("average-acw");
@@ -86,12 +87,21 @@ export function setupEventListeners({
 			onCalcStateChange(i, { actualAcw: Number(e.target.value) });
 		});
 	});
+
+	// Time
+	actualTimeHours.forEach((hoursIn, i) => {
+		hoursIn.addEventListener("change", (e) => {
+			onCalcStateChange(i, { actualTime: { hours: Number(e.target.value), minutes: Number(actualTimeMinutes[i].value) } });
+		});
+	});
+	actualTimeMinutes.forEach((minutesIn, i) => {
+		minutesIn.addEventListener("change", (e) => {
+			onCalcStateChange(i, { actualTime: { hours: Number(actualTimeHours[i].value), minutes: Number(e.target.value) } });
+		});
+	});
 	
 	// Settings //
 	// Workday
-	workHours.addEventListener("change", () => {
-		onSettingChange("workHours", Number(workHours.value));
-	});
 	dailyAux.addEventListener("change", () => {
 		onSettingChange("dailyAux", Number(dailyAux.value));
 	});
@@ -135,7 +145,6 @@ function showWeekend(canShow) {
 
 // Settings initialization
 export function setupSettings(settings) {
-	workHours.value = settings.workHours;
 	dailyAux.value = settings.dailyAux;
 	acwTarget.value = settings.acwTarget;
 	canShowTime.checked = settings.canShowTime;
@@ -149,15 +158,21 @@ export function setupSettings(settings) {
 export function setupCalcState(calcState) {
 	days.forEach((day, i) => {
 		const canEnable = calcState.days[i].attended;
+		const timeHoursInput = actualTimeHours[i];
+		const timeMinutesInput = actualTimeMinutes[i];
 		const acwInput = actualAcwInput[i];
 		
 		day.checked = canEnable;
 		
 		if (canEnable) {
 			acwInput.removeAttribute("disabled");
+			timeHoursInput.value = calcState.days[i].actualTime.hours;
+			timeMinutesInput.value = calcState.days[i].actualTime.minutes;
 			acwInput.value = calcState.days[i].actualAcw;
 		} else {
 			acwInput.setAttribute("disabled", true);
+			timeHoursInput.value = "0";
+			timeMinutesInput.value = "0";
 			acwInput.value = "";
 		};
 	});

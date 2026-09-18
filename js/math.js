@@ -4,6 +4,7 @@ const STORAGE_KEY = "acw-calc-state";
 const createDay = (attended = true) => ({
 	attended,
 	actualAcw: 0,
+	actualTime: { hours: 8, minutes: 0 },
 	acwDifference: 0,
 	acwDifferenceTime: { hours: 0, minutes: 0 },
 	availableAcw: 0,
@@ -33,10 +34,28 @@ function createState(savedState) {
 				0
 			) / this.attendedDays * 0.01);
 		},
+		get workWeek() {
+			// Sum up time for attended days
+			return this.days.reduce(
+				(sum, day) => sum + (
+					day.attended
+					? day.actualTime.hours * 3600 + day.actualTime.minutes * 60
+					: 0
+				),
+				0
+			);
+		},
 	};
 };
 
 let state = loadState();
+
+function dayWorkHours(i) {
+	const day = state.days[i];
+	return (
+		day.actualTime.hours * 3600 + day.actualTime.minutes * 60
+	);
+};
 
 function loadState() {
 	const savedState = localStorage.getItem(STORAGE_KEY);
@@ -88,22 +107,22 @@ function duration(timeInSeconds) {
 export function calculate(settings) {
 	// Get relevant settings
 	const acwTargetPercent = settings.acwTargetPercent;
-	const workHours = settings.workHoursInSec - (!settings.isAcwWoAux ? 0 : settings.dailyAuxInSec);
+	const workWeek = state.workWeek - (!settings.isAcwWoAux ? 0 : settings.dailyAuxInSec * state.attendedDays)
 	
 	// ACW target time for whole week
 	const attendedDays = state.attendedDays;
-	const workWeek = attendedDays * workHours;
 	const acwTargetTime = workWeek * acwTargetPercent;
 	
 	// Calculate remainging ACW for each day
 	let remainingTime = acwTargetTime;
-	let remainingDays = attendedDays;
-	state.days.forEach((day) => {
+	let remaingingWorkTime = workWeek;
+	state.days.forEach((day, i) => {
 		if (!day.attended) return; // Skip unattended days
 		
-		const availableTodayTime = remainingTime / remainingDays;
-		const availableTodayPercent = availableTodayTime / workHours;
-		
+		const workHours = dayWorkHours(i) - (!settings.isAcwWoAux ? 0 : settings.dailyAuxInSec);
+		const availableTodayPercent = remainingTime / remaingingWorkTime;
+		const availableTodayTime = workHours * availableTodayPercent;
+
 		const dayAcwPercent = day.actualAcw * 0.01;
 		const acwDifferenceTime = availableTodayTime - workHours * dayAcwPercent;
 		
@@ -111,14 +130,14 @@ export function calculate(settings) {
 		day.acwDifferenceTime = duration(acwDifferenceTime);
 		
 		if (dayAcwPercent) {
-			remainingTime = remainingTime - workHours * dayAcwPercent;
-			remainingDays--;
+			remainingTime -= workHours * dayAcwPercent;
+			remaingingWorkTime -= workHours;
 		};
 	});
 	
 	const acwRemainingTime = (
 		acwTargetTime - state.days.reduce(
-			(sum, day) => sum + workHours *
+			(sum, day, i) => sum + (dayWorkHours(i) - (!settings.isAcwWoAux ? 0 : settings.dailyAuxInSec)) *
 			(day.attended ? day.actualAcw * 0.01 : 0), 0)
 	);
 	
